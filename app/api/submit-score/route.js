@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { submitScore, getUserRank } from "@/lib/redis";
 
-// Basic Discord-username-shaped validation: 2-32 chars, letters/numbers/._
-const USERNAME_RE = /^[a-zA-Z0-9._]{2,32}$/;
+// Discord display names can include spaces, emoji, and symbols like "|" —
+// just enforce a length cap, no leading/trailing whitespace, and no control chars.
+const USERNAME_RE = /^[^\s][\s\S]{0,30}[^\s]$|^[^\s]$/;
+const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
+
+function isValidUsername(value) {
+  return USERNAME_RE.test(value) && !CONTROL_CHAR_RE.test(value);
+}
 
 export async function POST(request) {
   let body;
@@ -15,9 +21,9 @@ export async function POST(request) {
   const username = String(body?.username || "").trim();
   const score = Number(body?.score);
 
-  if (!USERNAME_RE.test(username)) {
+  if (!isValidUsername(username)) {
     return NextResponse.json(
-      { error: "Username must be 2-32 characters: letters, numbers, '.' or '_'." },
+      { error: "Username must be 1-32 characters with no leading/trailing spaces." },
       { status: 400 }
     );
   }

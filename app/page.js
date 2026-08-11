@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const USERNAME_RE = /^[a-zA-Z0-9._]{2,32}$/;
+// Discord display names can include spaces, emoji, and symbols like "|" —
+// just block empty/whitespace-only input and control characters.
+const USERNAME_RE = /^[^\s][\s\S]{0,30}[^\s]$|^[^\s]$/;
+const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
+
+function isValidUsername(value) {
+  return USERNAME_RE.test(value) && !CONTROL_CHAR_RE.test(value);
+}
 
 export default function HomePage() {
   const router = useRouter();
@@ -14,8 +21,8 @@ export default function HomePage() {
     e.preventDefault();
     const trimmed = username.trim();
 
-    if (!USERNAME_RE.test(trimmed)) {
-      setError("Enter your Discord username — 2-32 characters, letters, numbers, '.' or '_' only.");
+    if (!isValidUsername(trimmed)) {
+      setError("Enter your Discord username — 1-32 characters, no leading/trailing spaces.");
       return;
     }
 
