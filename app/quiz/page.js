@@ -1,5 +1,5 @@
-import QuizRunner from "@/components/QuizRunner";
+import LiveQuiz from "@/components/LiveQuiz";
 
 export default function QuizPage() {
-  return <QuizRunner />;
+  return <LiveQuiz />;
 }

@@ -97,11 +97,11 @@ export default function HomePage() {
           type="submit"
           className="mt-5 w-full rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#0a0d16] transition-transform active:scale-[0.98] hover:brightness-110"
         >
-          Start the quiz →
+          Join the quiz →
         </button>
 
         <p className="mt-3 text-center text-xs text-[var(--text-faint,var(--text-dim))]">
-          No sign-up. Your Discord username is your leaderboard name.
+          No sign-up. If nothing's live yet, you'll wait for the host to start.
         </p>
       </form>
 
