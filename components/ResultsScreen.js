@@ -44,7 +44,7 @@ export default function ResultsScreen() {
   const pct = Math.round((result.score / result.total) * 100);
 
   return (
-    <div className="mx-auto max-w-xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-xl px-4 py-8 sm:px-5 sm:py-14">
       <div className="card-pop rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:p-8">
         <p
           style={{ fontFamily: "var(--font-mono)" }}

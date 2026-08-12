@@ -199,12 +199,12 @@ export default function AdminConsole() {
   }
 
   if (authed === null) {
-    return <div className="mx-auto max-w-md px-5 py-24 text-center text-[var(--text-dim)]">Loading…</div>;
+    return <div className="mx-auto max-w-md px-4 py-24 sm:px-5 text-center text-[var(--text-dim)]">Loading…</div>;
   }
 
   if (!authed) {
     return (
-      <div className="mx-auto flex max-w-sm flex-col items-center px-5 py-20">
+      <div className="mx-auto flex max-w-sm flex-col items-center px-4 py-14 sm:px-5 sm:py-20">
         <h1 style={{ fontFamily: "var(--font-display)" }} className="text-2xl font-semibold text-[var(--text)]">
           Admin login
         </h1>
@@ -236,7 +236,7 @@ export default function AdminConsole() {
   const status = state?.status || "idle";
 
   return (
-    <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-5 sm:py-14">
       <div className="mb-8 flex items-center justify-between">
         <h1 style={{ fontFamily: "var(--font-display)" }} className="text-2xl font-semibold text-[var(--text)]">
           Quiz control room

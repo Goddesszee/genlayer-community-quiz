@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import WelcomeModal from "@/components/WelcomeModal";
 
 // Discord display names can include spaces, emoji, and symbols like "|" —
 // just block empty/whitespace-only input and control characters.
@@ -16,6 +17,7 @@ export default function HomePage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
+  const [showWelcome, setShowWelcome] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -27,28 +29,38 @@ export default function HomePage() {
     }
 
     localStorage.setItem("glq_username", trimmed);
+    setShowWelcome(true);
+  }
+
+  function handleContinue() {
     router.push("/quiz");
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col items-center px-5 pt-16 pb-24 sm:pt-24">
-      <div className="mb-6 flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--text-dim)]">
+    <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pt-10 pb-16 sm:px-5 sm:pt-20 sm:pb-24">
+      <img
+        src="/genlayer-logo-white.png"
+        alt="GenLayer"
+        className="mb-6 h-10 w-auto opacity-90 sm:h-12"
+      />
+
+      <div className="mb-5 flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--text-dim)] sm:mb-6">
         <span style={{ fontFamily: "var(--font-mono)" }}>10 QUESTIONS · MULTIPLE CHOICE</span>
       </div>
 
       <h1
         style={{ fontFamily: "var(--font-display)" }}
-        className="max-w-xl text-center text-4xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-5xl"
+        className="max-w-xl text-center text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-5xl"
       >
         How well do you know the <span className="text-[var(--accent)]">Intelligent Blockchain</span>?
       </h1>
 
-      <p className="mt-4 max-w-md text-center text-[var(--text-dim)]">
+      <p className="mt-4 max-w-md px-2 text-center text-sm text-[var(--text-dim)] sm:px-0 sm:text-base">
         A quick community quiz on GenLayer, AI, and Web3. Play with your Discord
         username and land on the leaderboard.
       </p>
 
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 px-4">
         {["GenLayer", "AI", "Web3"].map((tag) => (
           <span
             key={tag}
@@ -61,7 +73,7 @@ export default function HomePage() {
 
       <form
         onSubmit={handleSubmit}
-        className="card-pop mt-10 w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_0_0_1px_rgba(124,140,255,0.05)]"
+        className="card-pop mt-8 w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_0_0_1px_rgba(124,140,255,0.05)] sm:mt-10 sm:p-6"
       >
         <label
           htmlFor="username"
@@ -69,8 +81,9 @@ export default function HomePage() {
         >
           Discord username
         </label>
-        <div className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg-soft,var(--bg))] px-3 py-2.5 focus-within:border-[var(--accent)]">
-          <span style={{ fontFamily: "var(--font-mono)" }} className="text-[var(--text-faint,var(--text-dim))]">
+
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3.5 py-3 transition-colors focus-within:border-[var(--accent)]">
+          <span style={{ fontFamily: "var(--font-mono)" }} className="shrink-0 text-[var(--text-faint,var(--text-dim))]">
             @
           </span>
           <input
@@ -78,7 +91,9 @@ export default function HomePage() {
             type="text"
             inputMode="text"
             autoComplete="off"
-            autoFocus
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck="false"
             maxLength={32}
             placeholder="stargirl_hills"
             value={username}
@@ -87,7 +102,7 @@ export default function HomePage() {
               if (error) setError("");
             }}
             style={{ fontFamily: "var(--font-mono)" }}
-            className="w-full bg-transparent text-sm text-[var(--text)] placeholder:text-[var(--text-faint,var(--text-dim))] focus:outline-none"
+            className="w-full min-w-0 border-0 bg-transparent text-base text-[var(--text)] placeholder:text-[var(--text-faint,var(--text-dim))] focus:outline-none focus:ring-0 sm:text-sm"
           />
         </div>
 
@@ -95,7 +110,7 @@ export default function HomePage() {
 
         <button
           type="submit"
-          className="mt-5 w-full rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#0a0d16] transition-transform active:scale-[0.98] hover:brightness-110"
+          className="mt-5 w-full rounded-xl bg-[var(--accent)] px-4 py-3.5 text-sm font-semibold text-[#0a0d16] transition-transform active:scale-[0.98] hover:brightness-110 sm:py-3"
         >
           Join the quiz →
         </button>
@@ -111,6 +126,8 @@ export default function HomePage() {
       >
         Just here to see the leaderboard? →
       </a>
+
+      {showWelcome && <WelcomeModal username={username.trim()} onContinue={handleContinue} />}
     </div>
   );
 }

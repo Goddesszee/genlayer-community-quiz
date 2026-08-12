@@ -27,7 +27,7 @@ export default function LeaderboardScreen() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-xl px-4 py-8 sm:px-5 sm:py-14">
       <div className="mb-8 text-center">
         <p style={{ fontFamily: "var(--font-mono)" }} className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
           Community ranking

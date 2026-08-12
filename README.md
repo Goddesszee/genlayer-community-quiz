@@ -1,13 +1,13 @@
 # GenLayer Community Quiz
 
-A live, host-run multiple-choice quiz about **GenLayer, AI, and Web3**. An admin loads a set of questions and starts the round; every player's screen advances together, one question every 40 seconds, with live standings shown after each question and a final leaderboard — top 3 get a crown — once the round ends.
+A live, host-run multiple-choice quiz about **GenLayer, AI, and Web3**. An admin loads a set of questions and starts the round; every player's screen advances together, one question every 25 seconds, with live standings shown after each question and a final leaderboard — top 3 get a crown — once the round ends.
 
 ## How it works
 
 **Players**
 - Enter a Discord username on the home page — no OAuth, no sign-up.
 - If no quiz is loaded yet, you land on a "waiting for the host" screen that updates automatically.
-- Once the admin starts the round, everyone sees the same question at the same time with a 40-second timer.
+- Once the admin starts the round, everyone sees the same question at the same time with a 25-second timer.
 - After answering (or timing out), you see the correct answer and your **live position** in the round.
 - The next question appears automatically when the timer hits zero — no need to click "Next."
 - After 10 (or however many) questions, the round ends and everyone sees the final round leaderboard. Scores also roll into the permanent all-time leaderboard.
@@ -16,7 +16,7 @@ A live, host-run multiple-choice quiz about **GenLayer, AI, and Web3**. An admin
 - Go to `/admin` and log in with the admin password.
 - Tick the questions you want for this round from the bank, click **Load**.
 - Players who are on `/quiz` will now see a "starting soon" waiting room.
-- Click **Start quiz** whenever you're ready — this kicks off the synchronized 40-second-per-question countdown for everyone.
+- Click **Start quiz** whenever you're ready — this kicks off the synchronized 25-second-per-question countdown for everyone.
 - Watch live standings update as players answer.
 - Click **Reset session** afterward to clear the round and get ready for the next one.
 

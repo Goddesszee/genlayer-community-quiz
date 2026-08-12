@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import LeaderboardList from "@/components/LeaderboardList";
+import { QUESTION_DURATION_MS } from "@/lib/quizConfig";
 
 const POLL_MS = 2500;
 const LETTERS = ["A", "B", "C", "D"];
@@ -148,17 +149,17 @@ export default function LiveQuiz() {
   }
 
   if (username === null) {
-    return <div className="mx-auto max-w-xl px-5 py-24 text-center text-[var(--text-dim)]">Loading…</div>;
+    return <div className="mx-auto max-w-xl px-4 py-24 sm:px-5 text-center text-[var(--text-dim)]">Loading…</div>;
   }
 
   if (!session) {
-    return <div className="mx-auto max-w-xl px-5 py-24 text-center text-[var(--text-dim)]">Connecting…</div>;
+    return <div className="mx-auto max-w-xl px-4 py-24 sm:px-5 text-center text-[var(--text-dim)]">Connecting…</div>;
   }
 
   // ---------- idle ----------
   if (session.status === "idle") {
     return (
-      <div className="mx-auto max-w-xl px-5 py-20 text-center">
+      <div className="mx-auto max-w-xl px-4 py-14 sm:px-5 sm:py-20 text-center">
         <p style={{ fontFamily: "var(--font-mono)" }} className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
           No live quiz right now
         </p>
@@ -175,7 +176,7 @@ export default function LiveQuiz() {
   // ---------- waiting room ----------
   if (session.status === "waiting") {
     return (
-      <div className="mx-auto max-w-xl px-5 py-20 text-center">
+      <div className="mx-auto max-w-xl px-4 py-14 sm:px-5 sm:py-20 text-center">
         <span className="relative mx-auto mb-6 flex h-3 w-3">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-2)] opacity-60" />
           <span className="relative inline-flex h-3 w-3 rounded-full bg-[var(--accent-2)]" />
@@ -197,7 +198,7 @@ export default function LiveQuiz() {
   // ---------- ended ----------
   if (session.status === "ended") {
     return (
-      <div className="mx-auto max-w-xl px-5 py-10 sm:py-14">
+      <div className="mx-auto max-w-xl px-4 py-8 sm:px-5 sm:py-14">
         <div className="card-pop rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:p-8">
           <p style={{ fontFamily: "var(--font-mono)" }} className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
             Quiz complete
@@ -240,11 +241,11 @@ export default function LiveQuiz() {
   const secondsLeft = Math.max(0, Math.ceil((displayTimeLeft ?? 0) / 1000));
 
   if (!question) {
-    return <div className="mx-auto max-w-xl px-5 py-24 text-center text-[var(--text-dim)]">Syncing question…</div>;
+    return <div className="mx-auto max-w-xl px-4 py-24 sm:px-5 text-center text-[var(--text-dim)]">Syncing question…</div>;
   }
 
   return (
-    <div className="mx-auto max-w-xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-xl px-4 py-8 sm:px-5 sm:py-14">
       <div className="mb-4 flex items-center justify-between">
         <span style={{ fontFamily: "var(--font-mono)" }} className="text-xs text-[var(--text-dim)]">
           QUESTION {String(index + 1).padStart(2, "0")}/{String(totalQuestions).padStart(2, "0")}
@@ -269,7 +270,7 @@ export default function LiveQuiz() {
       <div className="mb-8 h-1 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
         <div
           className={`h-full rounded-full ${timeUrgent ? "bg-[var(--danger)]" : "bg-[var(--accent)]"}`}
-          style={{ width: `${((displayTimeLeft ?? 0) / 40000) * 100}%`, transition: "width 1s linear, background-color 0.3s ease" }}
+          style={{ width: `${((displayTimeLeft ?? 0) / QUESTION_DURATION_MS) * 100}%`, transition: "width 1s linear, background-color 0.3s ease" }}
         />
       </div>
 

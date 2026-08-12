@@ -73,6 +73,24 @@ body {
   border-radius: 6px;
 }
 
+/* iOS/Android form controls draw their own rounded focus ring on top of
+   custom styling unless native appearance is explicitly disabled — this
+   is what causes the "doubled box" look on mobile inputs. */
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  background-clip: padding-box;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
