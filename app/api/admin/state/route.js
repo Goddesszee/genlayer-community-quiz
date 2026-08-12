@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/adminAuth";
 import { getRawSession, computeState, countPlayers, getSessionLeaderboard } from "@/lib/session";
-import { QUESTIONS } from "@/lib/questions";
+import { getCombinedQuestions } from "@/lib/customQuestions";
 
 export async function GET(request) {
   if (!isAdminRequest(request)) {
@@ -10,7 +10,11 @@ export async function GET(request) {
 
   const session = await getRawSession();
   const state = computeState(session);
-  const [playerCount, leaderboard] = await Promise.all([countPlayers(), getSessionLeaderboard(50)]);
+  const [playerCount, leaderboard, allQuestions] = await Promise.all([
+    countPlayers(),
+    getSessionLeaderboard(50),
+    getCombinedQuestions(),
+  ]);
 
   return NextResponse.json({
     ok: true,
@@ -21,6 +25,11 @@ export async function GET(request) {
     loadedQuestionIds: session.questions.map((q) => q.id),
     playerCount,
     leaderboard,
-    questionBank: QUESTIONS.map((q) => ({ id: q.id, category: q.category, question: q.question })),
+    questionBank: allQuestions.map((q) => ({
+      id: q.id,
+      category: q.category,
+      question: q.question,
+      custom: !!q.custom,
+    })),
   });
 }

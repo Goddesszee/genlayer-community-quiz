@@ -6,7 +6,7 @@ import LeaderboardList from "@/components/LeaderboardList";
 
 const POLL_MS = 2500;
 const LETTERS = ["A", "B", "C", "D"];
-const CATEGORY_LABEL = { genlayer: "GenLayer", ai: "AI", web3: "Web3" };
+const CATEGORY_LABEL = { genlayer: "GenLayer", ai: "AI", web3: "Web3", other: "Other" };
 
 export default function LiveQuiz() {
   const router = useRouter();
@@ -261,7 +261,7 @@ export default function LiveQuiz() {
             0:{String(secondsLeft).padStart(2, "0")}
           </span>
           <span style={{ fontFamily: "var(--font-mono)" }} className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-[11px] text-[var(--text-dim)]">
-            {CATEGORY_LABEL[question.category]}
+            {CATEGORY_LABEL[question.category] || question.category}
           </span>
         </div>
       </div>

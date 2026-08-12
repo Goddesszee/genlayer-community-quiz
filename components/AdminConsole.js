@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 
 const POLL_MS = 3000;
-const CATEGORY_LABEL = { genlayer: "GenLayer", ai: "AI", web3: "Web3" };
+const CATEGORY_LABEL = { genlayer: "GenLayer", ai: "AI", web3: "Web3", other: "Other" };
+const EMPTY_FORM = { category: "genlayer", question: "", options: ["", "", "", ""], correctIndex: 0 };
 
 export default function AdminConsole() {
   const [authed, setAuthed] = useState(null); // null = checking, false = need login, true = in
@@ -15,6 +16,10 @@ export default function AdminConsole() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [actionError, setActionError] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [formError, setFormError] = useState("");
+  const [savingQuestion, setSavingQuestion] = useState(false);
 
   async function refreshState() {
     try {
@@ -67,6 +72,68 @@ export default function AdminConsole() {
     await fetch("/api/admin/logout", { method: "POST" });
     setAuthed(false);
     setState(null);
+  }
+
+  async function handleAddQuestion(e) {
+    e.preventDefault();
+    setFormError("");
+
+    const trimmedQuestion = form.question.trim();
+    const trimmedOptions = form.options.map((o) => o.trim());
+
+    if (trimmedQuestion.length < 5) {
+      setFormError("Write out the full question first.");
+      return;
+    }
+    if (trimmedOptions.some((o) => o.length === 0)) {
+      setFormError("Fill in all 4 answer options.");
+      return;
+    }
+
+    setSavingQuestion(true);
+    try {
+      const res = await fetch("/api/admin/questions/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: form.category,
+          question: trimmedQuestion,
+          options: trimmedOptions,
+          correctIndex: form.correctIndex,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFormError(data.error || "Could not save the question.");
+        return;
+      }
+      setForm(EMPTY_FORM);
+      // Pre-select the new question so it's ready to load right away.
+      setSelectedIds((prev) => new Set(prev).add(data.question.id));
+      await refreshState();
+    } catch {
+      setFormError("Network error — try again.");
+    } finally {
+      setSavingQuestion(false);
+    }
+  }
+
+  async function handleDeleteQuestion(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    try {
+      await fetch("/api/admin/questions/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      await refreshState();
+    } catch {
+      // non-fatal — next poll will resync the list
+    }
   }
 
   function toggleQuestion(id) {
@@ -254,6 +321,79 @@ export default function AdminConsole() {
         </div>
       )}
 
+      {/* Add a custom question */}
+      <div className="mb-8">
+        <h2 style={{ fontFamily: "var(--font-display)" }} className="mb-3 text-lg font-semibold text-[var(--text)]">
+          Add your own question
+        </h2>
+        <form onSubmit={handleAddQuestion} className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+          <div className="mb-3 flex items-center gap-3">
+            <label className="text-xs font-medium uppercase tracking-wide text-[var(--text-dim)]">Category</label>
+            <select
+              value={form.category}
+              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+              className="rounded-lg border border-[var(--border)] bg-[var(--bg-soft,var(--bg))] px-2.5 py-1.5 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+            >
+              <option value="genlayer">GenLayer</option>
+              <option value="ai">AI</option>
+              <option value="web3">Web3</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <textarea
+            value={form.question}
+            onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
+            placeholder="Type the question…"
+            rows={2}
+            maxLength={300}
+            className="w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--bg-soft,var(--bg))] px-3 py-2.5 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+          />
+
+          <p className="mt-4 mb-2 text-xs font-medium uppercase tracking-wide text-[var(--text-dim)]">
+            Options — pick the correct one
+          </p>
+          <div className="flex flex-col gap-2">
+            {form.options.map((opt, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="correctOption"
+                  checked={form.correctIndex === i}
+                  onChange={() => setForm((f) => ({ ...f, correctIndex: i }))}
+                  className="h-4 w-4 shrink-0 accent-[var(--accent-2)]"
+                  aria-label={`Option ${i + 1} is correct`}
+                />
+                <input
+                  type="text"
+                  value={opt}
+                  onChange={(e) =>
+                    setForm((f) => {
+                      const options = [...f.options];
+                      options[i] = e.target.value;
+                      return { ...f, options };
+                    })
+                  }
+                  maxLength={150}
+                  placeholder={`Option ${i + 1}`}
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-soft,var(--bg))] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+                />
+              </div>
+            ))}
+          </div>
+
+          {formError && <p className="mt-3 text-sm text-[var(--danger)]">{formError}</p>}
+
+          <button
+            type="submit"
+            disabled={savingQuestion}
+            className="mt-4 w-full rounded-xl bg-[var(--accent-2)] px-4 py-2.5 text-sm font-semibold text-[#0a0d16] disabled:cursor-not-allowed disabled:opacity-50 hover:brightness-110"
+          >
+            {savingQuestion ? "Saving…" : "Add to question bank"}
+          </button>
+        </form>
+      </div>
+
       {/* Question picker */}
       <div>
         <div className="mb-3 flex items-center justify-between">
@@ -267,26 +407,38 @@ export default function AdminConsole() {
 
         <div className="max-h-96 overflow-y-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
           {state?.questionBank?.map((q, i) => (
-            <label
+            <div
               key={q.id}
-              className={`flex cursor-pointer items-start gap-3 px-4 py-3 text-sm ${
+              className={`flex items-start gap-3 px-4 py-3 text-sm ${
                 i !== 0 ? "border-t border-[var(--border)]" : ""
               } ${selectedIds.has(q.id) ? "bg-[var(--accent-soft)]" : ""}`}
             >
-              <input
-                type="checkbox"
-                checked={selectedIds.has(q.id)}
-                onChange={() => toggleQuestion(q.id)}
-                className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
-              />
-              <span className="flex-1 text-[var(--text)]">{q.question}</span>
+              <label className="flex flex-1 cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.has(q.id)}
+                  onChange={() => toggleQuestion(q.id)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
+                />
+                <span className="flex-1 text-[var(--text)]">{q.question}</span>
+              </label>
               <span
                 style={{ fontFamily: "var(--font-mono)" }}
                 className="shrink-0 rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px] text-[var(--text-dim)]"
               >
-                {CATEGORY_LABEL[q.category]}
+                {CATEGORY_LABEL[q.category] || q.category}
               </span>
-            </label>
+              {q.custom && (
+                <button
+                  type="button"
+                  onClick={() => handleDeleteQuestion(q.id)}
+                  aria-label="Delete this question"
+                  className="shrink-0 text-[var(--text-dim)] hover:text-[var(--danger)]"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           ))}
         </div>
 
