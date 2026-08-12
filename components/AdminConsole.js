@@ -208,7 +208,7 @@ export default function AdminConsole() {
         <h1 style={{ fontFamily: "var(--font-display)" }} className="text-2xl font-semibold text-[var(--text)]">
           Admin login
         </h1>
-        <form onSubmit={handleLogin} className="card-pop mt-8 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+        <form onSubmit={handleLogin} className="card-pop glass-panel mt-8 w-full rounded-2xl p-6">
           <label htmlFor="pw" className="mb-2 block text-xs font-medium uppercase tracking-wide text-[var(--text-dim)]">
             Password
           </label>
@@ -224,7 +224,7 @@ export default function AdminConsole() {
           <button
             type="submit"
             disabled={loggingIn}
-            className="mt-5 w-full rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#0a0d16] disabled:opacity-50 hover:brightness-110"
+            className="btn-primary mt-5 w-full rounded-xl px-4 py-3 text-sm disabled:opacity-50"
           >
             {loggingIn ? "Checking…" : "Log in"}
           </button>
@@ -247,7 +247,7 @@ export default function AdminConsole() {
       </div>
 
       {/* Status card */}
-      <div className="mb-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <div className="mb-8 glass-panel rounded-2xl p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span
@@ -284,7 +284,7 @@ export default function AdminConsole() {
           <button
             onClick={handleStart}
             disabled={busy || status !== "waiting"}
-            className="rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[#0a0d16] disabled:cursor-not-allowed disabled:opacity-30 hover:brightness-110"
+            className="btn-primary rounded-xl px-4 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-30"
           >
             Start quiz →
           </button>
@@ -326,7 +326,7 @@ export default function AdminConsole() {
         <h2 style={{ fontFamily: "var(--font-display)" }} className="mb-3 text-lg font-semibold text-[var(--text)]">
           Add your own question
         </h2>
-        <form onSubmit={handleAddQuestion} className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+        <form onSubmit={handleAddQuestion} className="glass-panel rounded-2xl p-5">
           <div className="mb-3 flex items-center gap-3">
             <label className="text-xs font-medium uppercase tracking-wide text-[var(--text-dim)]">Category</label>
             <select
@@ -405,7 +405,7 @@ export default function AdminConsole() {
           </span>
         </div>
 
-        <div className="max-h-96 overflow-y-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+        <div className="max-h-96 overflow-y-auto glass-panel rounded-2xl">
           {state?.questionBank?.map((q, i) => (
             <div
               key={q.id}
@@ -445,7 +445,7 @@ export default function AdminConsole() {
         <button
           onClick={handleLoad}
           disabled={busy || selectedIds.size === 0}
-          className="mt-4 w-full rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#0a0d16] disabled:cursor-not-allowed disabled:opacity-30 hover:brightness-110"
+          className="btn-primary mt-4 w-full rounded-xl px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-30"
         >
           Load {selectedIds.size || ""} question{selectedIds.size === 1 ? "" : "s"} for next round
         </button>

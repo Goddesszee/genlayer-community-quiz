@@ -26,9 +26,9 @@ export default function LeaderboardList({ entries, highlightUsername }) {
         return (
           <li
             key={entry.username}
-            className={`flex items-center gap-4 rounded-xl border px-4 py-3 transition-colors ${
+            className={`flex items-center gap-4 rounded-xl border px-4 py-3 backdrop-blur transition-colors ${
               isTop3 ? RANK_BORDER[entry.rank] : "border-[var(--border)]"
-            } ${isMe ? "bg-[var(--accent-soft)]" : "bg-[var(--surface)]"}`}
+            } ${isMe ? "bg-[var(--accent-soft)]" : "bg-[var(--surface)]/70"}`}
           >
             <span
               style={{ fontFamily: "var(--font-mono)" }}

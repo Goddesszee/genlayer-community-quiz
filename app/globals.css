@@ -1,23 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0d16;
-  --bg-soft: #0d111c;
-  --surface: #131829;
-  --surface-2: #1a2137;
-  --border: #262f4a;
-  --border-soft: #1c2338;
+  --bg: #05070d;
+  --bg-soft: #080b14;
+  --surface: #10141f;
+  --surface-2: #171d2e;
+  --border: #262f47;
+  --border-soft: #1b2233;
 
-  --text: #eef1fb;
-  --text-dim: #8791ab;
-  --text-faint: #5b6480;
+  --text: #f4f6fc;
+  --text-dim: #8892ab;
+  --text-faint: #565f78;
 
-  --accent: #7c8cff;
-  --accent-soft: rgba(124, 140, 255, 0.14);
-  --accent-2: #45d6c0;
-  --accent-2-soft: rgba(69, 214, 192, 0.14);
-  --danger: #ff6b7a;
-  --danger-soft: rgba(255, 107, 122, 0.14);
+  --accent: #7c6cff;
+  --accent-2-raw: 124, 108, 255;
+  --accent-soft: rgba(124, 108, 255, 0.14);
+  --accent-glow: rgba(124, 108, 255, 0.35);
+
+  --accent-2: #2dd4bf;
+  --accent-2-soft: rgba(45, 212, 191, 0.14);
+
+  --accent-3: #f5a623;
+  --accent-3-soft: rgba(245, 166, 35, 0.14);
+
+  --danger: #ff5f72;
+  --danger-soft: rgba(255, 95, 114, 0.14);
 
   --gold: #f4c454;
   --silver: #cbd3e6;
@@ -37,6 +44,7 @@
   --color-text-dim: var(--text-dim);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
   --color-danger: var(--danger);
   --color-gold: var(--gold);
   --color-silver: var(--silver);
@@ -55,15 +63,19 @@ html {
 }
 
 body {
-  background: radial-gradient(1100px 620px at 50% -8%, #161c30 0%, var(--bg) 55%);
+  background:
+    radial-gradient(900px 480px at 18% -10%, rgba(124, 108, 255, 0.16) 0%, transparent 60%),
+    radial-gradient(700px 420px at 88% 8%, rgba(45, 212, 191, 0.08) 0%, transparent 55%),
+    var(--bg);
   color: var(--text);
   font-family: var(--font-body);
   min-height: 100vh;
+  position: relative;
 }
 
 ::selection {
   background: var(--accent);
-  color: #0a0d16;
+  color: #05070d;
 }
 
 /* Visible keyboard focus everywhere */
@@ -99,6 +111,68 @@ select:focus {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* ---------- Signature: ambient validator-network backdrop ---------- */
+/* A faint constellation of nodes/edges standing in for the validator
+   network reaching consensus — GenLayer's actual mechanism, not a
+   decorative particle effect. Fixed, behind all content, non-interactive. */
+.network-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.network-node {
+  animation: nodePulse 4.5s ease-in-out infinite;
+}
+@keyframes nodePulse {
+  0%, 100% { opacity: 0.35; r: 2.2; }
+  50% { opacity: 0.9; r: 3.2; }
+}
+
+/* ---------- Glass surface ---------- */
+.glass-panel {
+  background: linear-gradient(180deg, rgba(23, 29, 46, 0.72), rgba(16, 20, 31, 0.72));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-soft);
+  box-shadow:
+    0 0 0 1px rgba(124, 108, 255, 0.06),
+    0 20px 60px -20px rgba(0, 0, 0, 0.65);
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+  background: linear-gradient(155deg, #9188ff 0%, var(--accent) 55%, #6a5aef 100%);
+  color: #06070d;
+  font-weight: 600;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 10px 30px -10px var(--accent-glow);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 14px 36px -10px var(--accent-glow);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+.btn-primary:disabled {
+  filter: grayscale(0.3);
+  box-shadow: none;
+}
+
+/* ---------- Gradient headline text ---------- */
+.text-gradient {
+  background: linear-gradient(100deg, #ab9fff 0%, var(--accent) 45%, #6ee7d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Confirmation-strip progress bar (blockchain block confirmations motif) */
@@ -144,6 +218,10 @@ select:focus {
 
 .crown-glow-1 {
   filter: drop-shadow(0 0 10px rgba(244, 196, 84, 0.55));
+}
+
+.logo-glow {
+  filter: drop-shadow(0 0 18px rgba(124, 108, 255, 0.45));
 }
 
 .card-pop {

@@ -52,7 +52,7 @@ export default function LeaderboardScreen() {
       <div className="mt-8 text-center">
         <a
           href="/"
-          className="inline-block rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#0a0d16] hover:brightness-110"
+          className="btn-primary inline-block rounded-xl px-5 py-2.5 text-sm"
         >
           Take the quiz →
         </a>

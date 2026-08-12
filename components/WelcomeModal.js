@@ -8,11 +8,11 @@ export default function WelcomeModal({ username, onContinue }) {
       aria-modal="true"
       aria-labelledby="welcome-heading"
     >
-      <div className="card-pop w-full max-w-xs rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center shadow-2xl sm:max-w-sm sm:p-8">
+      <div className="card-pop glass-panel w-full max-w-xs rounded-2xl p-6 text-center sm:max-w-sm sm:p-8">
         <img
           src="/genlayer-logo-white.png"
           alt=""
-          className="mx-auto mb-5 h-14 w-auto opacity-95 sm:h-16"
+          className="logo-glow mx-auto mb-5 h-14 w-auto sm:h-16"
         />
 
         <p style={{ fontFamily: "var(--font-mono)" }} className="text-xs uppercase tracking-wide text-[var(--accent-2)]">
@@ -33,7 +33,7 @@ export default function WelcomeModal({ username, onContinue }) {
           type="button"
           onClick={onContinue}
           autoFocus
-          className="mt-6 w-full rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[#0a0d16] transition-transform active:scale-[0.98] hover:brightness-110"
+          className="btn-primary mt-6 w-full rounded-xl px-4 py-3 text-sm"
         >
           Continue to quiz →
         </button>

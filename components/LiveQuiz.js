@@ -8,6 +8,7 @@ import { QUESTION_DURATION_MS } from "@/lib/quizConfig";
 const POLL_MS = 2500;
 const LETTERS = ["A", "B", "C", "D"];
 const CATEGORY_LABEL = { genlayer: "GenLayer", ai: "AI", web3: "Web3", other: "Other" };
+const CATEGORY_COLOR = { genlayer: "var(--accent)", ai: "var(--accent-2)", web3: "var(--accent-3)", other: "var(--text-faint)" };
 
 export default function LiveQuiz() {
   const router = useRouter();
@@ -199,7 +200,7 @@ export default function LiveQuiz() {
   if (session.status === "ended") {
     return (
       <div className="mx-auto max-w-xl px-4 py-8 sm:px-5 sm:py-14">
-        <div className="card-pop rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:p-8">
+        <div className="card-pop glass-panel rounded-2xl p-6 text-center sm:p-8">
           <p style={{ fontFamily: "var(--font-mono)" }} className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
             Quiz complete
           </p>
@@ -210,7 +211,7 @@ export default function LiveQuiz() {
             <a href="/leaderboard" className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm text-[var(--text)] hover:bg-[var(--surface-2)]">
               All-time leaderboard
             </a>
-            <a href="/" className="rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[#0a0d16] hover:brightness-110">
+            <a href="/" className="btn-primary rounded-xl px-4 py-2.5 text-sm">
               Back home
             </a>
           </div>
@@ -261,7 +262,8 @@ export default function LiveQuiz() {
           >
             0:{String(secondsLeft).padStart(2, "0")}
           </span>
-          <span style={{ fontFamily: "var(--font-mono)" }} className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-[11px] text-[var(--text-dim)]">
+          <span style={{ fontFamily: "var(--font-mono)" }} className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-[11px] text-[var(--text-dim)]">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: CATEGORY_COLOR[question.category] }} />
             {CATEGORY_LABEL[question.category] || question.category}
           </span>
         </div>
@@ -274,7 +276,7 @@ export default function LiveQuiz() {
         />
       </div>
 
-      <div key={question.index} className="card-pop">
+      <div key={question.index} className="card-pop glass-panel rounded-2xl p-5 sm:p-6">
         <h2 style={{ fontFamily: "var(--font-display)" }} className="mb-6 text-xl font-semibold leading-snug text-[var(--text)] sm:text-2xl">
           {question.question}
         </h2>
